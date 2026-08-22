@@ -61,6 +61,8 @@ export function CommitHistoryList({
                     ? 'bg-indigo-600 border-indigo-200 dark:border-indigo-900 ring-2 ring-indigo-500/20'
                     : isSelected
                     ? 'bg-amber-500 border-amber-200 dark:border-amber-900 ring-2 ring-amber-500/20'
+                    : commit.is_merge_commit
+                    ? 'bg-purple-600 border-purple-200 dark:border-purple-900 ring-2 ring-purple-500/20'
                     : 'bg-white dark:bg-slate-900 border-slate-400 group-hover:border-indigo-500'
                 }`}
               />
@@ -84,6 +86,11 @@ export function CommitHistoryList({
                         HEAD
                       </Badge>
                     )}
+                    {commit.is_merge_commit && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                        Merge
+                      </span>
+                    )}
                     {isSelected && !isHead && (
                       <Badge variant="amber" size="sm" className="text-[10px]">
                         Viewing
@@ -97,6 +104,20 @@ export function CommitHistoryList({
                 <p className="font-medium text-slate-900 dark:text-slate-100 text-xs my-1.5">
                   {commit.message}
                 </p>
+
+                {/* Merge Parent Attribution */}
+                {commit.is_merge_commit && commit.parent_commit_id && commit.merge_parent_id && (
+                  <div className="mb-2 text-[10px] font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                    <span>Parents:</span>
+                    <span className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">
+                      {commit.parent_commit_id.slice(0, 7)}
+                    </span>
+                    <span>+</span>
+                    <span className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">
+                      {commit.merge_parent_id.slice(0, 7)}
+                    </span>
+                  </div>
+                )}
 
                 {/* Actions */}
                 <div className="flex items-center justify-between gap-2 pt-2 mt-2 border-t border-slate-200/60 dark:border-slate-800 text-[11px]">

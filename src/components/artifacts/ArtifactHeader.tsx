@@ -14,6 +14,7 @@ export interface ArtifactHeaderProps {
   isViewingHistory: boolean
   onSelectBranch: (branchId: string) => void
   onOpenCreateBranch: () => void
+  onOpenMerge?: () => void
 }
 
 export function ArtifactHeader({
@@ -25,8 +26,10 @@ export function ArtifactHeader({
   isViewingHistory,
   onSelectBranch,
   onOpenCreateBranch,
+  onOpenMerge,
 }: ArtifactHeaderProps) {
   const shortHash = currentCommit?.id ? currentCommit.id.slice(0, 7) : 'root'
+  const canMerge = branches.length > 1
 
   return (
     <div className="space-y-4 pb-6 border-b border-slate-200 dark:border-slate-800">
@@ -99,6 +102,31 @@ export function ArtifactHeader({
             </svg>
             New Branch
           </Button>
+
+          {canMerge && onOpenMerge && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onOpenMerge}
+              className="text-xs"
+            >
+              <svg
+                className="w-3.5 h-3.5 mr-1"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="18" cy="18" r="3" />
+                <circle cx="6" cy="6" r="3" />
+                <path d="M6 9v12" />
+                <path d="M18 15V9a9 9 0 0 0-9-9" />
+              </svg>
+              Merge Branches
+            </Button>
+          )}
         </div>
       </div>
 

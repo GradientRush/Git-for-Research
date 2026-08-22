@@ -6,6 +6,8 @@ import { ArtifactHeader } from '@/components/artifacts/ArtifactHeader'
 import { DocumentEditor } from '@/components/artifacts/DocumentEditor'
 import { CommitHistoryList } from '@/components/artifacts/CommitHistoryList'
 import { CreateBranchModal } from '@/components/artifacts/CreateBranchModal'
+import { MergeDialog } from '@/components/merge/MergeDialog'
+import type { CompleteMergeResult } from '@/app/actions/merge'
 
 export interface ArtifactDetailClientProps {
   workspaceId: string
@@ -33,6 +35,7 @@ export function ArtifactDetailClient({
     initialSelectedCommitId || null
   )
   const [isCreateBranchOpen, setIsCreateBranchOpen] = useState<boolean>(false)
+  const [isMergeOpen, setIsMergeOpen] = useState<boolean>(false)
   const [branchSourceCommit, setBranchSourceCommit] =
     useState<CommitRow | null>(null)
 
@@ -110,6 +113,30 @@ export function ArtifactDetailClient({
     setSelectedCommitId(null)
   }
 
+  const handleMergeCompleted = (result: CompleteMergeResult) => {
+    // 1. Prepend merge commit to target branch history
+    setCommitsByBranch((prev) => ({
+      ...prev,
+      [result.targetBranch.id]: [
+        result.mergeCommit,
+        ...(prev[result.targetBranch.id] || []),
+      ],
+    }))
+
+    // 2. Update target branch's head_commit_id in branch list
+    setBranchList((prev) =>
+      prev.map((b) =>
+        b.id === result.targetBranch.id
+          ? { ...b, head_commit_id: result.mergeCommit.id }
+          : b
+      )
+    )
+
+    // 3. Switch active view to target branch
+    setActiveBranchId(result.targetBranch.id)
+    setSelectedCommitId(null)
+  }
+
   return (
     <div className="space-y-6">
       {/* Header & Controls */}
@@ -122,6 +149,7 @@ export function ArtifactDetailClient({
         isViewingHistory={isViewingHistory}
         onSelectBranch={handleSelectBranch}
         onOpenCreateBranch={() => handleOpenCreateBranch(activeHeadCommit || undefined)}
+        onOpenMerge={() => setIsMergeOpen(true)}
       />
 
       {/* Main Two-Column Workspace Layout */}
@@ -159,6 +187,17 @@ export function ArtifactDetailClient({
         artifactId={artifact.id}
         fromCommit={branchSourceCommit}
         onBranchCreated={handleBranchCreated}
+      />
+
+      {/* Merge & Diff Modal */}
+      <MergeDialog
+        isOpen={isMergeOpen}
+        onClose={() => setIsMergeOpen(false)}
+        workspaceId={workspaceId}
+        artifactId={artifact.id}
+        branches={branchList}
+        activeBranchId={activeBranchId}
+        onMergeCompleted={handleMergeCompleted}
       />
     </div>
   )
