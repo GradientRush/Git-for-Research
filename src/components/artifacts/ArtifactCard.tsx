@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import type { ArtifactRow } from '@/types/database'
 import { Badge } from '@/components/ui/Badge'
 
@@ -25,7 +26,10 @@ export function ArtifactCard({ artifact }: ArtifactCardProps) {
   )
 
   return (
-    <div className="flex flex-col justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+    <Link
+      href={`/workspaces/${artifact.workspace_id}/artifacts/${artifact.id}`}
+      className="group relative flex flex-col justify-between bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-xs hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-700/60 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    >
       <div>
         {/* Top bar: Type badge & Created date */}
         <div className="flex items-center justify-between gap-2 mb-3">
@@ -38,7 +42,7 @@ export function ArtifactCard({ artifact }: ArtifactCardProps) {
         </div>
 
         {/* Title */}
-        <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100 line-clamp-1">
+        <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
           {artifact.name}
         </h4>
 
@@ -65,14 +69,13 @@ export function ArtifactCard({ artifact }: ArtifactCardProps) {
 
       {/* Footer Info */}
       <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-        <span className="inline-flex items-center gap-1 font-mono text-[11px]">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-          main branch
+        <span className="inline-flex items-center gap-1 font-mono text-[11px] text-indigo-600 dark:text-indigo-400 group-hover:translate-x-0.5 transition-transform">
+          Open Artifact &rarr;
         </span>
         <span className="text-[11px] text-slate-400 dark:text-slate-500">
           v1.0 (Initial)
         </span>
       </div>
-    </div>
+    </Link>
   )
 }
