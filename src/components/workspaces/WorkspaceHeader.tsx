@@ -10,6 +10,7 @@ export interface WorkspaceHeaderProps {
   members: WorkspaceMemberWithUser[]
   artifactCount: number
   onNewArtifact: () => void
+  onImportArtifact: () => void
 }
 
 export function WorkspaceHeader({
@@ -17,6 +18,7 @@ export function WorkspaceHeader({
   members,
   artifactCount,
   onNewArtifact,
+  onImportArtifact,
 }: WorkspaceHeaderProps) {
   const formattedDate = new Date(workspace.created_at).toLocaleDateString(
     'en-US',
@@ -115,23 +117,42 @@ export function WorkspaceHeader({
           </div>
         </div>
 
-        {/* Header Action */}
-        <Button variant="primary" onClick={onNewArtifact} className="shrink-0">
-          <svg
-            className="w-4 h-4 mr-1.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          New Artifact
-        </Button>
+        {/* Header Action Group */}
+        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <Button variant="outline" size="sm" onClick={onNewArtifact}>
+            <svg
+              className="w-3.5 h-3.5 mr-1 text-slate-600 dark:text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            New Artifact
+          </Button>
+
+          <Button variant="primary" size="sm" onClick={onImportArtifact}>
+            <svg
+              className="w-3.5 h-3.5 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
+            Import File
+          </Button>
+        </div>
       </div>
 
       {/* Workspace Team Members Section */}

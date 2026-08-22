@@ -54,3 +54,18 @@ export async function listWorkspaceArtifacts(workspaceId: string): Promise<Artif
 
   return data ?? []
 }
+
+/**
+ * Deletes an artifact by its UUID (used for partial-state compensation/cleanup).
+ */
+export async function deleteArtifact(id: string): Promise<void> {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('artifacts')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    throw new Error(`Failed to delete artifact (${id}): ${error.message}`)
+  }
+}

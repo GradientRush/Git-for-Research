@@ -4,27 +4,34 @@ import React from 'react'
 import type { ArtifactRow } from '@/types/database'
 import { ArtifactCard } from '@/components/artifacts/ArtifactCard'
 import { CreateArtifactModal } from '@/components/artifacts/CreateArtifactModal'
+import { ImportArtifactModal } from '@/components/artifacts/ImportArtifactModal'
 import { Button } from '@/components/ui/Button'
 
 export interface ArtifactListProps {
   workspaceId: string
   artifacts: ArtifactRow[]
-  isModalOpen: boolean
-  onOpenModal: () => void
-  onCloseModal: () => void
+  isCreateModalOpen: boolean
+  isImportModalOpen: boolean
+  onOpenCreateModal: () => void
+  onCloseCreateModal: () => void
+  onOpenImportModal: () => void
+  onCloseImportModal: () => void
 }
 
 export function ArtifactList({
   workspaceId,
   artifacts,
-  isModalOpen,
-  onOpenModal,
-  onCloseModal,
+  isCreateModalOpen,
+  isImportModalOpen,
+  onOpenCreateModal,
+  onCloseCreateModal,
+  onOpenImportModal,
+  onCloseImportModal,
 }: ArtifactListProps) {
   return (
     <div className="space-y-4">
       {/* Section Subheading & Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
             Research Artifacts
@@ -33,22 +40,41 @@ export function ArtifactList({
             All version-controlled documents, PDFs, and chat transcripts in this workspace.
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={onOpenModal}>
-          <svg
-            className="w-3.5 h-3.5 mr-1 text-indigo-600 dark:text-indigo-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          New Artifact
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onOpenCreateModal}>
+            <svg
+              className="w-3.5 h-3.5 mr-1 text-slate-600 dark:text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            New Artifact
+          </Button>
+
+          <Button variant="primary" size="sm" onClick={onOpenImportModal}>
+            <svg
+              className="w-3.5 h-3.5 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
+            Import File
+          </Button>
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -74,10 +100,13 @@ export function ArtifactList({
             No research artifacts yet.
           </h3>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 max-w-sm">
-            Create a Markdown document or import research materials to begin.
+            Import a Markdown paper, PDF draft, or conversation transcript to begin version-controlling research.
           </p>
-          <div className="mt-5">
-            <Button variant="primary" size="sm" onClick={onOpenModal}>
+          <div className="mt-5 flex items-center gap-3">
+            <Button variant="outline" size="sm" onClick={onOpenCreateModal}>
+              Create Manually
+            </Button>
+            <Button variant="primary" size="sm" onClick={onOpenImportModal}>
               <svg
                 className="w-3.5 h-3.5 mr-1"
                 fill="none"
@@ -88,10 +117,10 @@ export function ArtifactList({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 4v16m8-8H4"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                 />
               </svg>
-              New Artifact
+              Import File
             </Button>
           </div>
         </div>
@@ -104,11 +133,18 @@ export function ArtifactList({
         </div>
       )}
 
-      {/* Creation Modal */}
+      {/* Manual Creation Modal */}
       <CreateArtifactModal
         workspaceId={workspaceId}
-        isOpen={isModalOpen}
-        onClose={onCloseModal}
+        isOpen={isCreateModalOpen}
+        onClose={onCloseCreateModal}
+      />
+
+      {/* Raw File Import Modal */}
+      <ImportArtifactModal
+        workspaceId={workspaceId}
+        isOpen={isImportModalOpen}
+        onClose={onCloseImportModal}
       />
     </div>
   )

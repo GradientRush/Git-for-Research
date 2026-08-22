@@ -17,7 +17,8 @@ export function WorkspaceDetailClient({
   members,
   artifacts,
 }: WorkspaceDetailClientProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   return (
     <div className="space-y-8">
@@ -25,14 +26,18 @@ export function WorkspaceDetailClient({
         workspace={workspace}
         members={members}
         artifactCount={artifacts.length}
-        onNewArtifact={() => setIsModalOpen(true)}
+        onNewArtifact={() => setIsCreateModalOpen(true)}
+        onImportArtifact={() => setIsImportModalOpen(true)}
       />
       <ArtifactList
         workspaceId={workspace.id}
         artifacts={artifacts}
-        isModalOpen={isModalOpen}
-        onOpenModal={() => setIsModalOpen(true)}
-        onCloseModal={() => setIsModalOpen(false)}
+        isCreateModalOpen={isCreateModalOpen}
+        isImportModalOpen={isImportModalOpen}
+        onOpenCreateModal={() => setIsCreateModalOpen(true)}
+        onCloseCreateModal={() => setIsCreateModalOpen(false)}
+        onOpenImportModal={() => setIsImportModalOpen(true)}
+        onCloseImportModal={() => setIsImportModalOpen(false)}
       />
     </div>
   )

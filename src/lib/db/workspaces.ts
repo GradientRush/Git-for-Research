@@ -120,3 +120,25 @@ export async function getWorkspaceMembers(
 
   return (data as unknown as WorkspaceMemberWithUser[]) ?? []
 }
+
+/**
+ * Checks whether a specific user is a registered member of a workspace.
+ */
+export async function getWorkspaceMembership(
+  workspaceId: string,
+  userId: string
+): Promise<WorkspaceMemberRow | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('workspace_members')
+    .select('*')
+    .eq('workspace_id', workspaceId)
+    .eq('user_id', userId)
+    .maybeSingle()
+
+  if (error) {
+    throw new Error(`Failed to check workspace membership: ${error.message}`)
+  }
+
+  return data
+}
